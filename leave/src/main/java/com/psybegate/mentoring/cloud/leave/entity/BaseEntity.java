@@ -23,4 +23,6 @@ public abstract class BaseEntity {
 
   @UpdateTimestamp
   private LocalDateTime updated;
+
+  private boolean active = true;
 }
