@@ -1,6 +1,8 @@
 package com.psybegate.mentoring.cloud.leave.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -22,6 +24,9 @@ public class LeaveApplication extends BaseEntity {
   private boolean isPartial;
 
   private double hours;
+
+  @Enumerated(EnumType.STRING)
+  private LeaveType leaveType;
 
   private String description;
 
