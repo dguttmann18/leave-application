@@ -46,9 +46,11 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
   }
 
   @Override
-  public LeaveApplication get(Long id) {
-    return leaveApplicationRepository.findById(id)
+  public LeaveApplicationResponse get(Long id) {
+    LeaveApplication entity = leaveApplicationRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("LeaveApplication " + id + " not found"));
+
+    return mapper.toResponse(entity);
   }
 
   @Override
