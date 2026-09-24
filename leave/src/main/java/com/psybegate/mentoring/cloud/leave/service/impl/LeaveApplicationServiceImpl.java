@@ -6,6 +6,7 @@ import com.psybegate.mentoring.cloud.leave.entity.LeaveApplication;
 import com.psybegate.mentoring.cloud.leave.mapper.LeaveApplicationMapper;
 import com.psybegate.mentoring.cloud.leave.repository.LeaveApplicationRepository;
 import com.psybegate.mentoring.cloud.leave.service.LeaveApplicationService;
+import com.psybegate.mentoring.cloud.leave.service.LeaveDueService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -22,11 +23,16 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 
   private final LeaveApplicationMapper mapper;
 
+  private final LeaveDueService leaveDueService;
+
   @Transactional
   @Override
   public void save(LeaveApplicationRequest leaveApplicationRequest) {
     LeaveApplication entity = mapper.toEntity(leaveApplicationRequest);
     leaveApplicationRepository.save(entity);
+
+    double hours = entity.getHours();
+    leaveDueService.subtractLeaveHours(hours);
   }
 
   @Transactional
@@ -35,14 +41,23 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
     LeaveApplication entity = leaveApplicationRepository.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("LeaveApplication " + id + " not found"));
 
+    double oldHours = entity.getHours();
+    double newHours = leaveApplicationRequest.getHours();
+
     mapper.updateEntityFromRequest(leaveApplicationRequest, entity);
     leaveApplicationRepository.save(entity);
+
+    double difference = newHours - oldHours;
+    leaveDueService.addLeaveHours(difference);
   }
 
   @Transactional
   @Override
   public void delete(Long id) {
+    LeaveApplicationResponse dto = get(id);
+    double hours = dto.getHours();
     leaveApplicationRepository.deactivate(id);
+    leaveDueService.addLeaveHours(hours);
   }
 
   @Override
