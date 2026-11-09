@@ -6,6 +6,7 @@ import com.psybegate.mentoring.cloud.leave.service.LeaveApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -36,6 +37,16 @@ public class LeaveApplicationController {
     return value == null
             ? leaveApplicationService.getAll()
             : leaveApplicationService.getContaining(value);
+  }
+
+  @GetMapping("{firstDay}/{lastDay}")
+  public List<LeaveApplicationResponse> getAllLeaveApplicationInRange(@PathVariable LocalDate firstDay, @PathVariable LocalDate lastDay) {
+    return leaveApplicationService.getAllInRange(firstDay, lastDay);
+  }
+
+  @DeleteMapping("{id}")
+  public void deleteLeaveApplication(@PathVariable Long id) {
+    leaveApplicationService.delete(id);
   }
 
 }

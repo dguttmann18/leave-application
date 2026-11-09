@@ -12,6 +12,8 @@ import lombok.Data;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -91,5 +93,10 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
   @Override
   public List<LeaveApplicationResponse> getAllInclusive() {
     return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplicationsInclusive());
+  }
+
+  @Override
+  public List<LeaveApplicationResponse> getAllInRange(LocalDate firstDay, LocalDate lastDay) {
+    return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplicationsInRange(firstDay, lastDay));
   }
 }

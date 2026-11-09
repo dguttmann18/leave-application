@@ -39,7 +39,7 @@ public interface LeaveApplicationRepository extends JpaRepository<LeaveApplicati
   @Query("SELECT l FROM LeaveApplication l WHERE l.leaveType = :leaveType")
   List<LeaveApplication> getAllLeaveApplicationsInclusiveOfType(@Param("leaveType") LeaveType leaveType);
 
-  @Query("SELECT l FROM LeaveApplication l WHERE l.active = true AND l.firstDay >= :firstDate AND l.lastDay <= :lastDate")
+  @Query("SELECT l FROM LeaveApplication l WHERE l.active = true AND l.firstDay <= :lastDate AND l.lastDay >= :firstDate")
   List<LeaveApplication> getAllLeaveApplicationsInRange(@Param("firstDate") LocalDate firstDate, @Param("lastDate") LocalDate lastDate);
 
   @Query("SELECT l FROM LeaveApplication l WHERE l.active = false AND l.firstDay >= :firstDate AND l.lastDay <= :lastDate")

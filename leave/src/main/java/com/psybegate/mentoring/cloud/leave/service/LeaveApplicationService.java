@@ -3,6 +3,7 @@ package com.psybegate.mentoring.cloud.leave.service;
 import com.psybegate.mentoring.cloud.leave.dto.request.LeaveApplicationRequest;
 import com.psybegate.mentoring.cloud.leave.dto.response.LeaveApplicationResponse;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface LeaveApplicationService {
@@ -24,5 +25,7 @@ public interface LeaveApplicationService {
   List<LeaveApplicationResponse> getAllDeleted();
 
   List<LeaveApplicationResponse> getAllInclusive();
+
+  List<LeaveApplicationResponse> getAllInRange(LocalDate firstDay, LocalDate lastDay);
 
 }
