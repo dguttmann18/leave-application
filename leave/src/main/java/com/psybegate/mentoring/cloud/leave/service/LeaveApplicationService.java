@@ -12,7 +12,7 @@ public interface LeaveApplicationService {
 
   void update(LeaveApplicationRequest leaveApplicationRequest, Long id);
 
-  void delete(Long id);
+  void deactivate(Long id);
 
   LeaveApplicationResponse get(Long id);
 
@@ -20,12 +20,12 @@ public interface LeaveApplicationService {
 
   List<LeaveApplicationResponse> getContainingWithDeleted(String value);
 
-  List<LeaveApplicationResponse> getAll();
+  List<LeaveApplicationResponse> getAll(String orderBy, boolean isAscending);
 
   List<LeaveApplicationResponse> getAllDeleted();
 
   List<LeaveApplicationResponse> getAllInclusive();
 
-  List<LeaveApplicationResponse> getAllInRange(LocalDate firstDay, LocalDate lastDay);
+  List<LeaveApplicationResponse> getAllInRange(LocalDate firstDay, LocalDate lastDay, String orderBy, boolean isAscending);
 
 }

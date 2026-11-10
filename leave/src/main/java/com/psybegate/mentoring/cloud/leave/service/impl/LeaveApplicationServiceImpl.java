@@ -9,11 +9,11 @@ import com.psybegate.mentoring.cloud.leave.service.LeaveApplicationService;
 import com.psybegate.mentoring.cloud.leave.service.LeaveDueService;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.Data;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -54,12 +54,10 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
   }
 
   @Transactional
-  @Override
-  public void delete(Long id) {
-    LeaveApplicationResponse dto = get(id);
-    double hours = dto.getHours();
-    leaveApplicationRepository.deactivate(id);
-    leaveDueService.addLeaveHours(hours);
+  public void deactivate(Long id) {
+    LeaveApplication leave = leaveApplicationRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Leave application " + id + " not found"));
+    leave.setActive(false);
   }
 
   @Override
@@ -72,31 +70,37 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
 
   @Override
   public List<LeaveApplicationResponse> getContaining(String value) {
-    return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplicationsContaining(value));
+    return null;
   }
 
   @Override
   public List<LeaveApplicationResponse> getContainingWithDeleted(String value) {
-    return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplicationsContaining(value));
+    return null;
   }
 
   @Override
-  public List<LeaveApplicationResponse> getAll() {
-    return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplications());
+  public List<LeaveApplicationResponse> getAll(String orderBy, boolean isAscending) {
+    List<LeaveApplication> list = isAscending
+            ? leaveApplicationRepository.findByActiveTrue(Sort.by(Sort.Direction.ASC, orderBy))
+            : leaveApplicationRepository.findByActiveTrue(Sort.by(Sort.Direction.DESC, orderBy));
+    return mapper.toResponseList(list);
   }
 
   @Override
   public List<LeaveApplicationResponse> getAllDeleted() {
-    return mapper.toResponseList(leaveApplicationRepository.getAllDeactivatedLeaveApplications());
+    return null;
   }
 
   @Override
   public List<LeaveApplicationResponse> getAllInclusive() {
-    return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplicationsInclusive());
+    return null;
   }
 
   @Override
-  public List<LeaveApplicationResponse> getAllInRange(LocalDate firstDay, LocalDate lastDay) {
-    return mapper.toResponseList(leaveApplicationRepository.getAllLeaveApplicationsInRange(firstDay, lastDay));
+  public List<LeaveApplicationResponse> getAllInRange(LocalDate firstDay, LocalDate lastDay, String orderBy, boolean isAscending) {
+    List<LeaveApplication> list = isAscending
+            ? leaveApplicationRepository.findByActiveTrueAndFirstDayLessThanEqualAndLastDayGreaterThanEqual(lastDay, firstDay, Sort.by(Sort.Direction.ASC, orderBy))
+            : leaveApplicationRepository.findByActiveTrueAndFirstDayLessThanEqualAndLastDayGreaterThanEqual(lastDay, firstDay,Sort.by(Sort.Direction.DESC, orderBy));
+    return mapper.toResponseList(list);
   }
 }
