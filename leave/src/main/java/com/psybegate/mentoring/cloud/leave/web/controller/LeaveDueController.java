@@ -1,5 +1,7 @@
 package com.psybegate.mentoring.cloud.leave.web.controller;
 
+import com.psybegate.mentoring.cloud.leave.dto.response.LeaveDueResponse;
+import com.psybegate.mentoring.cloud.leave.mapper.LeaveDueMapper;
 import com.psybegate.mentoring.cloud.leave.service.LeaveDueService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,8 +24,10 @@ public class LeaveDueController {
   }
 
   @GetMapping
-  public double getLeaveDue() {
-    return leaveDueService.getLeaveHours();
+  public LeaveDueResponse getLeaveDue() {
+    double hours = leaveDueService.getLeaveHours();
+    LeaveDueResponse dto = LeaveDueMapper.hoursToDto(hours);
+    return dto;
   }
 
 }
