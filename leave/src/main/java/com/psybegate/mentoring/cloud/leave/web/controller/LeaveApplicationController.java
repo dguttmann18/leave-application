@@ -31,22 +31,19 @@ public class LeaveApplicationController {
     return leaveApplicationService.get(id);
   }
 
-  @GetMapping("/all")
-  public List<LeaveApplicationResponse> getAllLeaveApplications(
-          @RequestParam(required = false) String value) {
-    return value == null
-            ? leaveApplicationService.getAll()
-            : leaveApplicationService.getContaining(value);
-  }
-
-  @GetMapping("{firstDay}/{lastDay}")
-  public List<LeaveApplicationResponse> getAllLeaveApplicationInRange(@PathVariable LocalDate firstDay, @PathVariable LocalDate lastDay) {
-    return leaveApplicationService.getAllInRange(firstDay, lastDay);
+  @GetMapping("{firstDay}/{lastDay}/{sortBy}/{isAscending}")
+  public List<LeaveApplicationResponse> getAllLeaveApplicationInRange(
+          @PathVariable LocalDate firstDay,
+          @PathVariable LocalDate lastDay,
+          @PathVariable String sortBy,
+          @PathVariable boolean isAscending
+  ) {
+    return leaveApplicationService.getAllInRange(firstDay, lastDay, sortBy, isAscending);
   }
 
   @DeleteMapping("{id}")
   public void deleteLeaveApplication(@PathVariable Long id) {
-    leaveApplicationService.delete(id);
+    leaveApplicationService.deactivate(id);
   }
 
 }
