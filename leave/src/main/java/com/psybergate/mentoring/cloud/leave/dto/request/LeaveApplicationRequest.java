@@ -1,5 +1,6 @@
 package com.psybergate.mentoring.cloud.leave.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.psybergate.mentoring.cloud.leave.entity.LeaveType;
 import lombok.Data;
 
@@ -12,6 +13,7 @@ public class LeaveApplicationRequest {
 
   private LocalDate lastDay;
 
+  @JsonProperty("isPartial")
   private boolean isPartial;
 
   private double hours;
