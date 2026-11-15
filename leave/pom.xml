@@ -8,7 +8,7 @@
 		<version>4.1.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.psybegate.mentoring.cloud</groupId>
+	<groupId>com.psybergate.mentoring.cloud</groupId>
 	<artifactId>leave</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
