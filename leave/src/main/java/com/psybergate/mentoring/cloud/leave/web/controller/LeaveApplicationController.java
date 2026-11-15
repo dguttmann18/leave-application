@@ -1,8 +1,8 @@
-package com.psybegate.mentoring.cloud.leave.web.controller;
+package com.psybergate.mentoring.cloud.leave.web.controller;
 
-import com.psybegate.mentoring.cloud.leave.dto.request.LeaveApplicationRequest;
-import com.psybegate.mentoring.cloud.leave.dto.response.LeaveApplicationResponse;
-import com.psybegate.mentoring.cloud.leave.service.LeaveApplicationService;
+import com.psybergate.mentoring.cloud.leave.dto.request.LeaveApplicationRequest;
+import com.psybergate.mentoring.cloud.leave.dto.response.LeaveApplicationResponse;
+import com.psybergate.mentoring.cloud.leave.service.LeaveApplicationService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
