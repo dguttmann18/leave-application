@@ -10,7 +10,8 @@ import com.psybergate.mentoring.cloud.leave.repository.LeaveApplicationRepositor
 import com.psybergate.mentoring.cloud.leave.service.LeaveApplicationService;
 import com.psybergate.mentoring.cloud.leave.service.LeaveDueService;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
+@Slf4j
+@RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
 public class LeaveApplicationServiceImpl implements LeaveApplicationService {
@@ -35,12 +37,13 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
   @Override
   public void save(LeaveApplicationRequest leaveApplicationRequest) {
     LeaveApplication entity = mapper.toEntity(leaveApplicationRequest);
-    leaveApplicationRepository.save(entity);
+    LeaveApplication saved = leaveApplicationRepository.save(entity);
 
     double hours = entity.getHours();
     leaveDueService.subtractLeaveHours(hours);
 
     timeSheetClient.createLeaveEntries(toTimeSheetRequest(entity));
+    log.info("Created leave application {} ({} to {}, {}h)", saved.getId(), saved.getFirstDay(), saved.getLastDay(), saved.getHours());
   }
 
   @Transactional
@@ -57,6 +60,8 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
     double difference = newHours - oldHours;
     leaveDueService.subtractLeaveHours(difference);
     timeSheetClient.createLeaveEntries(toTimeSheetRequest(entity));
+    log.info("Updated leave application {} ({} to {}): {}h -> {}h",
+            id, entity.getFirstDay(), entity.getLastDay(), oldHours, newHours);
   }
 
   @Transactional
@@ -69,6 +74,7 @@ public class LeaveApplicationServiceImpl implements LeaveApplicationService {
     leave.setActive(false);
     leaveDueService.addLeaveHours(leave.getHours());
     timeSheetClient.deleteLeaveEntries(id);
+    log.info("Cancelled leave application {}, refunded {}h", id, leave.getHours());
   }
 
   @Override
